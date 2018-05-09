@@ -1,0 +1,10 @@
+{
+  "name": "chainlinked",
+  "version": "0.2.0",
+  "license": "MIT",
+  "dependencies": {
+    "chainlink": "github:smartcontractkit/chainlink",
+    "linkToken": "github:smartcontractkit/linktoken",
+    "openzeppelin-solidity": "github:OpenZeppelin/openzeppelin-solidity",
+  }
+}
