@@ -28,11 +28,11 @@ contract MyContract is Chainlinked, Ownable {
     requestId = chainlinkRequest(run, LINK(1));
   }
 
-  function cancelRequest(uint256 _internalId)
+  function cancelRequest()
     public
     onlyOwner
   {
-    oracle.cancel(_internalId);
+    oracle.cancel(requestId);
   }
 
   function fulfill(bytes32 _requestId, bytes32 _price)

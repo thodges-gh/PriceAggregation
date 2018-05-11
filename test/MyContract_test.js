@@ -132,8 +132,14 @@ contract('MyContract', () => {
     context("when called by a non-owner", () => {
       it("cannot cancel a request", async () => {
         await assertActionThrows(async () => {
-          await cc.cancelRequest(stranger, {from: stranger});
+          await cc.cancelRequest({from: stranger});
         });
+      });
+    });
+
+    context("when called by the owner", () => {
+      it("can cancel the request", async () => {
+        await cc.cancelRequest({from: consumer});
       });
     });
   });
