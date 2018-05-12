@@ -4,9 +4,6 @@
   "license": "MIT",
   "dependencies": {
     "chainlink": "github:smartcontractkit/chainlink",
-    "ethereumjs-abi": "^0.6.5",
-    "linkToken": "github:smartcontractkit/linktoken",
-    "solidity-cborutils": "github:smartcontractkit/solidity-cborutils",
-    "openzeppelin-solidity": "github:OpenZeppelin/openzeppelin-solidity"
+    "ethereumjs-abi": "^0.6.5"
   }
 }

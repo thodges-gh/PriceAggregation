@@ -6,6 +6,7 @@ Implementation of [How to make a Chainlinked contract](https://github.com/smartc
 
 - NPM
 - Truffle
+- GCC (for testing)
 
 ## Installation
 
