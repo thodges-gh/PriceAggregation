@@ -13,7 +13,7 @@ contract MyContract is Chainlinked, Ownable {
     bytes32 indexed price
   );
 
-  function MyContract(address _link, address _oracle, bytes32 _jobId) public {
+  constructor(address _link, address _oracle, bytes32 _jobId) public {
     setLinkToken(_link);
     setOracle(_oracle);
     jobId = _jobId;

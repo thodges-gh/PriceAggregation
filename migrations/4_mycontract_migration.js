@@ -1,6 +1,6 @@
-var MyContract = artifacts.require("MyContract.sol");
-var Oracle = artifacts.require("Oracle.sol");
-var LinkToken = artifacts.require("LinkToken.sol");
+var MyContract = artifacts.require("./MyContract.sol");
+var Oracle = artifacts.require("./Oracle.sol");
+var LinkToken = artifacts.require("./LinkToken.sol");
 
 module.exports = function(deployer, network) {
   if (network == "ropsten") {
