@@ -6,12 +6,13 @@ Implementation of [How to make a Chainlinked contract](https://github.com/smartc
 
 - NPM
 - Truffle
+- Yarn
 - GCC (for testing)
 
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ## Test
