@@ -1,6 +1,6 @@
 # Chainlinked
 
-Implementation of [How to make a Chainlinked contract](https://github.com/smartcontractkit/chainlink/wiki/How-to-make-a-Chainlinked-contract).
+Implementation of [how to make a Chainlinked contract](https://docs.chain.link/docs/getting-started).
 
 ## Requirements
 

@@ -39,6 +39,7 @@ contract('MyContract', () => {
         let params = await cbor.decodeFirst(cborData);
         let expected = {
           "path":["USD"],
+          "times": 100,
           "url":"https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR,JPY"
         };
 

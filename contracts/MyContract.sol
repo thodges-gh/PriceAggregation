@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import "chainlink/solidity/contracts/Chainlinked.sol";
 
@@ -24,6 +24,7 @@ contract MyContract is Chainlinked, Ownable {
     string[] memory path = new string[](1);
     path[0] = _currency;
     run.addStringArray("path", path);
+    run.addInt("times", 100);
     requestId = chainlinkRequest(run, LINK(1));
   }
 
@@ -40,5 +41,9 @@ contract MyContract is Chainlinked, Ownable {
   {
     emit RequestFulfilled(_requestId, _price);
     currentPrice = _price;
+  }
+
+  function withdrawLink() onlyOwner public {
+    require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
   }
 }
