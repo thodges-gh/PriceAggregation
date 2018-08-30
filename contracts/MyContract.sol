@@ -1,7 +1,6 @@
 pragma solidity ^0.4.23;
 
 import "chainlink/solidity/contracts/Chainlinked.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract MyContract is Chainlinked, Ownable {
   bytes32 internal requestId;
@@ -37,15 +36,9 @@ contract MyContract is Chainlinked, Ownable {
 
   function fulfill(bytes32 _requestId, bytes32 _price)
     public
-    onlyOracle
-    checkRequestId(_requestId)
+    checkChainlinkFulfillment(_requestId)
   {
     emit RequestFulfilled(_requestId, _price);
     currentPrice = _price;
-  }
-
-  modifier checkRequestId(bytes32 _requestId) {
-    require(requestId == _requestId);
-    _;
   }
 }

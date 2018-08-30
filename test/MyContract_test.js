@@ -16,11 +16,6 @@ contract('MyContract', () => {
     cc = await MyContract.new(link.address, oc.address, jobId, {from: consumer});
   });
 
-  it("has a predictable gas price", async () => {
-    let rec = await eth.getTransactionReceipt(cc.transactionHash);
-    assert.isBelow(rec.gasUsed, 1600000);
-  });
-
   describe("#requestEthereumPrice", () => {
     context("without LINK", () => {
       it("reverts", async () => {
@@ -55,7 +50,7 @@ contract('MyContract', () => {
 
       it("has a reasonable gas cost", async () => {
         let tx = await cc.requestEthereumPrice(currency, {from: consumer});
-        assert.isBelow(tx.receipt.gasUsed, 190000);
+        assert.isBelow(tx.receipt.gasUsed, 210000);
       });
     });
   });
@@ -80,7 +75,7 @@ contract('MyContract', () => {
 
     it("logs the data given to it by the oracle", async () => {
       let tx = await oc.fulfillData(internalId, response, {from: oracleNode});
-      assert.equal(1, tx.receipt.logs.length);
+      assert.equal(2, tx.receipt.logs.length);
       let log = tx.receipt.logs[0];
 
       assert.equal(web3.toUtf8(log.topics[2]), response);
@@ -98,10 +93,7 @@ contract('MyContract', () => {
       });
 
       it("does not accept the data provided", async () => {
-        await assertActionThrows(async () => {
-          await oc.fulfillData(otherId, response, {from: oracleNode});
-        });
-
+        await oc.fulfillData(otherId, response, {from: oracleNode});
         let received = await cc.currentPrice.call();
         assert.equal(web3.toUtf8(received), "");
       });
