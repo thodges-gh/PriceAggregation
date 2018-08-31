@@ -12,13 +12,20 @@ contract MyContract is Chainlinked, Ownable {
     bytes32 indexed price
   );
 
-  constructor(address _link, address _oracle, bytes32 _jobId) public {
+  constructor(address _link, address _oracle) public {
     setLinkToken(_link);
     setOracle(_oracle);
+  }
+
+  function setJobId(bytes32 _jobId) public onlyOwner {
     jobId = _jobId;
   }
 
-  function requestEthereumPrice(string _currency) public onlyOwner {
+  function requestEthereumPrice(string _currency)
+    public
+    onlyOwner
+    withJobId
+  {
     ChainlinkLib.Run memory run = newRun(jobId, this, "fulfill(bytes32,bytes32)");
     run.add("url", "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR,JPY");
     string[] memory path = new string[](1);
@@ -45,5 +52,10 @@ contract MyContract is Chainlinked, Ownable {
 
   function withdrawLink() onlyOwner public {
     require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
+  }
+
+  modifier withJobId() {
+    require(jobId != 0x00, "No JobID present");
+    _;
   }
 }
