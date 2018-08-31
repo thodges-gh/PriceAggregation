@@ -16,6 +16,22 @@ contract('MyContract', () => {
     cc = await MyContract.new(link.address, oc.address, {from: consumer});
   });
 
+  describe("#setJobId", () => {
+    context("when called by a non-owner", () => {
+      it("does not set", async () => {
+        await assertActionThrows(async () => {
+          await cc.setJobId(jobId, {from: stranger});
+        });
+      });
+    });
+
+    context("when called by the owner", () => {
+      it("sets the job id", async () => {
+        await cc.setJobId(jobId, {from: consumer});
+      });
+    });
+  });
+
   describe("#requestEthereumPrice", () => {
     context("without a JobID", () => {
       it("reverts", async () => {
@@ -24,10 +40,12 @@ contract('MyContract', () => {
         });
       });
     });
+
     context("with a JobID", () => {
       beforeEach(async () => {
         await cc.setJobId(jobId, {from: consumer});
       });
+
       context("without LINK", () => {
         it("reverts", async () => {
           await assertActionThrows(async () => {
@@ -81,7 +99,6 @@ contract('MyContract', () => {
 
     it("records the data given to it by the oracle", async () => {
       await oc.fulfillData(internalId, response, {from: oracleNode});
-
       let currentPrice = await cc.currentPrice.call();
       assert.equal(web3.toUtf8(currentPrice), response);
     });
@@ -151,7 +168,6 @@ contract('MyContract', () => {
   });
 
   describe("#withdrawLink", () => {
-
     beforeEach(async () => {
       await link.transfer(cc.address, web3.toWei('1', 'ether'));
     });
