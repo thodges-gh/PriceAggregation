@@ -166,7 +166,11 @@ contract('MyContract', () => {
 
     context("when called by the owner", () => {
       it("transfers LINK to the owner", async () => {
+        const beforeBalance = await link.balanceOf(consumer);
+        assert.equal(beforeBalance.toString(), "0");
         await cc.withdrawLink({from: consumer});
+        const afterBalance = await link.balanceOf(consumer);
+        assert.equal(afterBalance.toString(), web3.toWei('1', 'ether'));
       });
     });
   });
