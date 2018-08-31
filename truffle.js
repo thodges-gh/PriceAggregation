@@ -3,15 +3,18 @@ module.exports = {
   networks: {
     development: {
       host: "127.0.0.1",
-      port: 18545,
+      port: 8545,
       network_id: "*",
-      gas: 4700000
     },
     ropsten: {
       host: "127.0.0.1",
       port: 8545,
-      network_id: "*",
-      gas: 4700000
+      network_id: "3",
+    },
+    rinkeby: {
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "4",
     }
   }
 };
