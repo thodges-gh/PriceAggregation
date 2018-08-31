@@ -149,4 +149,25 @@ contract('MyContract', () => {
       });
     });
   });
+
+  describe("#withdrawLink", () => {
+
+    beforeEach(async () => {
+      await link.transfer(cc.address, web3.toWei('1', 'ether'));
+    });
+
+    context("when called by a non-owner", () => {
+      it("cannot withdraw", async () => {
+        await assertActionThrows(async () => {
+          await cc.withdrawLink({from: stranger});
+        });
+      });
+    });
+
+    context("when called by the owner", () => {
+      it("transfers LINK to the owner", async () => {
+        await cc.withdrawLink({from: consumer});
+      });
+    });
+  });
 });
