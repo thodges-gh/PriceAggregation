@@ -7,8 +7,9 @@ contract('MyContract', () => {
   let Oracle = artifacts.require("Oracle.sol");
   let MyContract = artifacts.require("MyContract.sol");
   let jobId = "4c7b7ffb66b344fbaa64995af81e355a";
-  let currency = "USD";
-  let link, oc, cc;
+  let coin = "ETH";
+  let market = "USD";
+  let link, oc, cc, newOc;
 
   beforeEach(async () => {
     link = await Link.new();
@@ -36,7 +37,7 @@ contract('MyContract', () => {
     context("without a JobID", () => {
       it("reverts", async () => {
         await assertActionThrows(async () => {
-          await cc.requestEthereumPrice(currency, {from: consumer});
+          await cc.requestEthereumPrice(market, {from: consumer});
         });
       });
     });
@@ -49,7 +50,7 @@ contract('MyContract', () => {
       context("without LINK", () => {
         it("reverts", async () => {
           await assertActionThrows(async () => {
-            await cc.requestEthereumPrice(currency, {from: consumer});
+            await cc.requestEthereumPrice(market, {from: consumer});
           });
         });
       });
@@ -60,7 +61,7 @@ contract('MyContract', () => {
         });
 
         it("triggers a log event in the Oracle contract", async () => {
-          let tx = await cc.requestEthereumPrice(currency, {from: consumer});
+          let tx = await cc.requestEthereumPrice(market, {from: consumer});
           let log = tx.receipt.logs[2];
           assert.equal(log.address, oc.address);
 
@@ -79,12 +80,67 @@ contract('MyContract', () => {
         });
 
         it("has a reasonable gas cost", async () => {
-          let tx = await cc.requestEthereumPrice(currency, {from: consumer});
+          let tx = await cc.requestEthereumPrice(market, {from: consumer});
           assert.isBelow(tx.receipt.gasUsed, 210000);
         });
       });
     });
   });
+
+  describe("#dynamicPriceRequest", () => {
+    before(async () => {
+      newOc = await Oracle.new(link.address, {from: oracleNode});
+    });
+
+    context("without LINK", () => {
+      it("reverts", async () => {
+        await assertActionThrows(async () => {
+          await cc.dynamicPriceRequest(newOc.address, jobId, coin, market, {from: consumer});
+        });
+      });
+    });
+
+    context("with LINK", () => {
+      beforeEach(async () => {
+        await link.transfer(cc.address, web3.toWei('1', 'ether'));
+      });
+
+      it("reverts if either oracle or jobId are not supplied", async () => {
+        await assertActionThrows(async () => {
+          await cc.dynamicPriceRequest("", jobId, "eth", "usd", {from: consumer});
+        });
+        await assertActionThrows(async () => {
+          await cc.dynamicPriceRequest(newOc.address, "", "eth", "usd", {from: consumer});
+        });
+      });
+
+      it("triggers a log event in the Oracle contract", async () => {
+        let tx = await cc.dynamicPriceRequest(newOc.address, jobId, coin, market, {from: consumer});
+        let log = tx.receipt.logs[2];
+        assert.equal(log.address, newOc.address);
+
+        let [id, jId, wei, ver, cborData] = decodeRunRequest(log);
+        let params = await cbor.decodeFirst(cborData);
+        let expected = {
+          "market":"USD",
+          "coin": "ETH"
+        };
+
+        assert.equal(`0x${toHex(rPad(jobId))}`, jId);
+        assert.equal(web3.toWei('1', 'ether'), hexToInt(wei));
+        assert.equal(1, ver);
+        assert.deepEqual(expected, params);
+      });
+
+      it("has a reasonable gas cost", async () => {
+        let tx = await cc.dynamicPriceRequest(newOc.address, jobId, coin, market, {from: consumer});
+        assert.isBelow(tx.receipt.gasUsed, 220000);
+      });
+    });
+    
+
+  });
+
   describe("#fulfillData", () => {
     let response = "1,000,000.00";
     let internalId;
@@ -92,7 +148,7 @@ contract('MyContract', () => {
     beforeEach(async () => {
       await link.transfer(cc.address, web3.toWei('1', 'ether'));
       await cc.setJobId(jobId, {from: consumer});
-      await cc.requestEthereumPrice(currency, {from: consumer});
+      await cc.requestEthereumPrice(market, {from: consumer});
       let event = await getLatestEvent(oc);
       internalId = event.args.internalId;
     });
@@ -147,7 +203,7 @@ contract('MyContract', () => {
     beforeEach(async () => {
       await link.transfer(cc.address, web3.toWei('1', 'ether'));
       await cc.setJobId(jobId, {from: consumer});
-      await cc.requestEthereumPrice(currency, {from: consumer});
+      await cc.requestEthereumPrice(market, {from: consumer});
       let event = await getLatestEvent(oc);
       requestId = event.args.internalId;
     });

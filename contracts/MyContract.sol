@@ -35,6 +35,19 @@ contract MyContract is Chainlinked, Ownable {
     requestId = chainlinkRequest(run, LINK(1));
   }
 
+  function dynamicPriceRequest(address _oracle, bytes32 _jobId, string _coin, string _market)
+    public
+    onlyOwner
+  {
+    require(_oracle != address(0), "Oracle address must be present");
+    require(_jobId != 0x0, "Job ID must be present");
+    setOracle(_oracle);
+    ChainlinkLib.Run memory run = newRun(_jobId, this, "fulfill(bytes32,bytes32)");
+    run.add("coin", _coin);
+    run.add("market", _market);
+    requestId = chainlinkRequest(run, LINK(1));
+  }
+
   function cancelRequest()
     public
     onlyOwner
