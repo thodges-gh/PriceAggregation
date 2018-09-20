@@ -14,6 +14,7 @@ contract('MyContract', () => {
   beforeEach(async () => {
     link = await Link.new();
     oc = await Oracle.new(link.address, {from: oracleNode});
+    newOc = await Oracle.new(link.address, {from: oracleNode});
     cc = await MyContract.new(link.address, oc.address, {from: consumer});
   });
 
@@ -88,10 +89,6 @@ contract('MyContract', () => {
   });
 
   describe("#dynamicPriceRequest", () => {
-    before(async () => {
-      newOc = await Oracle.new(link.address, {from: oracleNode});
-    });
-
     context("without LINK", () => {
       it("reverts", async () => {
         await assertActionThrows(async () => {
@@ -107,10 +104,10 @@ contract('MyContract', () => {
 
       it("reverts if either oracle or jobId are not supplied", async () => {
         await assertActionThrows(async () => {
-          await cc.dynamicPriceRequest("", jobId, "eth", "usd", {from: consumer});
+          await cc.dynamicPriceRequest("", jobId, coin, market, {from: consumer});
         });
         await assertActionThrows(async () => {
-          await cc.dynamicPriceRequest(newOc.address, "", "eth", "usd", {from: consumer});
+          await cc.dynamicPriceRequest(newOc.address, "", coin, market, {from: consumer});
         });
       });
 
