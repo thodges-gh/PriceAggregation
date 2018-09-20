@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-require('./support/helpers.js')
+require("./support/helpers.js");
 
-contract('MyContract', () => {
+contract("MyContract", () => {
   let Link = artifacts.require("LinkToken.sol");
   let Oracle = artifacts.require("Oracle.sol");
   let MyContract = artifacts.require("MyContract.sol");
@@ -58,7 +58,7 @@ contract('MyContract', () => {
 
       context("with LINK", () => {
         beforeEach(async () => {
-          await link.transfer(cc.address, web3.toWei('1', 'ether'));
+          await link.transfer(cc.address, web3.toWei("1", "ether"));
         });
 
         it("triggers a log event in the Oracle contract", async () => {
@@ -74,8 +74,9 @@ contract('MyContract', () => {
             "url":"https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR,JPY"
           };
 
+          assert.equal(log.topics[1], id);
           assert.equal(`0x${toHex(rPad(jobId))}`, jId);
-          assert.equal(web3.toWei('1', 'ether'), hexToInt(wei));
+          assert.equal(web3.toWei("1", "ether"), hexToInt(wei));
           assert.equal(1, ver);
           assert.deepEqual(expected, params);
         });
@@ -99,7 +100,7 @@ contract('MyContract', () => {
 
     context("with LINK", () => {
       beforeEach(async () => {
-        await link.transfer(cc.address, web3.toWei('1', 'ether'));
+        await link.transfer(cc.address, web3.toWei("1", "ether"));
       });
 
       it("reverts if either oracle or jobId are not supplied", async () => {
@@ -123,8 +124,9 @@ contract('MyContract', () => {
           "coin": "ETH"
         };
 
+        assert.equal(log.topics[1], id);
         assert.equal(`0x${toHex(rPad(jobId))}`, jId);
-        assert.equal(web3.toWei('1', 'ether'), hexToInt(wei));
+        assert.equal(web3.toWei("1", "ether"), hexToInt(wei));
         assert.equal(1, ver);
         assert.deepEqual(expected, params);
       });
@@ -143,7 +145,7 @@ contract('MyContract', () => {
     let internalId;
 
     beforeEach(async () => {
-      await link.transfer(cc.address, web3.toWei('1', 'ether'));
+      await link.transfer(cc.address, web3.toWei("1", "ether"));
       await cc.setJobId(jobId, {from: consumer});
       await cc.requestEthereumPrice(market, {from: consumer});
       let event = await getLatestEvent(oc);
@@ -185,7 +187,7 @@ contract('MyContract', () => {
     context("when called by anyone other than the oracle contract", () => {
       it("does not accept the data provided", async () => {
         await assertActionThrows(async () => {
-          await cc.fulfill(internalId, response, {from: oracleNode})
+          await cc.fulfill(internalId, response, {from: oracleNode});
         });
 
         let received = await cc.currentPrice.call();
@@ -195,14 +197,10 @@ contract('MyContract', () => {
   });
 
   describe("#cancelRequest", () => {
-    let requestId;
-
     beforeEach(async () => {
-      await link.transfer(cc.address, web3.toWei('1', 'ether'));
+      await link.transfer(cc.address, web3.toWei("1", "ether"));
       await cc.setJobId(jobId, {from: consumer});
       await cc.requestEthereumPrice(market, {from: consumer});
-      let event = await getLatestEvent(oc);
-      requestId = event.args.internalId;
     });
 
     context("when called by a non-owner", () => {
@@ -222,7 +220,7 @@ contract('MyContract', () => {
 
   describe("#withdrawLink", () => {
     beforeEach(async () => {
-      await link.transfer(cc.address, web3.toWei('1', 'ether'));
+      await link.transfer(cc.address, web3.toWei("1", "ether"));
     });
 
     context("when called by a non-owner", () => {
@@ -239,7 +237,7 @@ contract('MyContract', () => {
         assert.equal(beforeBalance.toString(), "0");
         await cc.withdrawLink({from: consumer});
         const afterBalance = await link.balanceOf(consumer);
-        assert.equal(afterBalance.toString(), web3.toWei('1', 'ether'));
+        assert.equal(afterBalance.toString(), web3.toWei("1", "ether"));
       });
     });
   });

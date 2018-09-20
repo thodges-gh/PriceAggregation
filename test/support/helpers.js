@@ -1,7 +1,7 @@
-BigNumber = require('bignumber.js');
-moment = require('moment');
-abi = require('ethereumjs-abi');
-util = require('ethereumjs-util');
+BigNumber = require("bignumber.js");
+moment = require("moment");
+abi = require("ethereumjs-abi");
+util = require("ethereumjs-util");
 cbor = require("cbor");
 
 (() => {

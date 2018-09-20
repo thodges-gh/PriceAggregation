@@ -64,7 +64,7 @@ contract MyContract is Chainlinked, Ownable {
     currentPrice = _price;
   }
 
-  function withdrawLink() onlyOwner public {
+  function withdrawLink() public onlyOwner {
     require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
   }
 
