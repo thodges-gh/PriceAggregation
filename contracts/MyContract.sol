@@ -53,7 +53,7 @@ contract MyContract is Chainlinked, Ownable {
     public
     onlyOwner
   {
-    oracle.cancel(requestId);
+    cancelChainlinkRequest(requestId);
   }
 
   function fulfill(bytes32 _requestId, bytes32 _price)
@@ -64,9 +64,9 @@ contract MyContract is Chainlinked, Ownable {
     currentPrice = _price;
   }
 
-  function withdrawLink() public onlyOwner {
-    require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
-  }
+  // function withdrawLink() public onlyOwner {
+  //   require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
+  // }
 
   modifier withJobId() {
     require(jobId != 0x00, "No JobID present");
