@@ -66,15 +66,16 @@ contract("MyContract", () => {
           let log = tx.receipt.logs[3];
           assert.equal(log.address, oc.address);
 
-          let [id, jId, wei, ver, cborData] = decodeRunRequest(log);
+          let [jId, requester, wei, id, ver, cborData] = decodeRunRequest(log);
           let params = await cbor.decodeFirst(cborData);
           let expected = {
             "path":["USD"],
             "times": 100,
             "url":"https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR,JPY"
           };
-
-          assert.equal(log.topics[1], id);
+          
+          assert.isAbove(id.toNumber(), 0);
+          assert.equal(cc.address.slice(2), requester.slice(26));
           assert.equal(`0x${toHex(rPad(jobId))}`, jId);
           assert.equal(web3.toWei("1", "ether"), hexToInt(wei));
           assert.equal(1, ver);
@@ -117,14 +118,15 @@ contract("MyContract", () => {
         let log = tx.receipt.logs[3];
         assert.equal(log.address, newOc.address);
 
-        let [id, jId, wei, ver, cborData] = decodeRunRequest(log);
+        let [jId, requester, wei, id, ver, cborData] = decodeRunRequest(log);
         let params = await cbor.decodeFirst(cborData);
         let expected = {
           "market":"USD",
           "coin": "ETH"
         };
 
-        assert.equal(log.topics[1], id);
+        assert.isAbove(id.toNumber(), 0);
+        assert.equal(cc.address.slice(2), requester.slice(26));
         assert.equal(`0x${toHex(rPad(jobId))}`, jId);
         assert.equal(web3.toWei("1", "ether"), hexToInt(wei));
         assert.equal(1, ver);
@@ -213,32 +215,33 @@ contract("MyContract", () => {
 
     context("when called by the owner", () => {
       it("can cancel the request", async () => {
+        await increaseTime5Minutes();
         await cc.cancelRequest({from: consumer});
       });
     });
   });
 
-  // describe("#withdrawLink", () => {
-  //   beforeEach(async () => {
-  //     await link.transfer(cc.address, web3.toWei("1", "ether"));
-  //   });
+  describe("#withdrawLink", () => {
+    beforeEach(async () => {
+      await link.transfer(cc.address, web3.toWei("1", "ether"));
+    });
 
-  //   context("when called by a non-owner", () => {
-  //     it("cannot withdraw", async () => {
-  //       await assertActionThrows(async () => {
-  //         await cc.withdrawLink({from: stranger});
-  //       });
-  //     });
-  //   });
+    context("when called by a non-owner", () => {
+      it("cannot withdraw", async () => {
+        await assertActionThrows(async () => {
+          await cc.withdrawLink({from: stranger});
+        });
+      });
+    });
 
-  //   context("when called by the owner", () => {
-  //     it("transfers LINK to the owner", async () => {
-  //       const beforeBalance = await link.balanceOf(consumer);
-  //       assert.equal(beforeBalance.toString(), "0");
-  //       await cc.withdrawLink({from: consumer});
-  //       const afterBalance = await link.balanceOf(consumer);
-  //       assert.equal(afterBalance.toString(), web3.toWei("1", "ether"));
-  //     });
-  //   });
-  // });
+    context("when called by the owner", () => {
+      it("transfers LINK to the owner", async () => {
+        const beforeBalance = await link.balanceOf(consumer);
+        assert.equal(beforeBalance.toString(), "0");
+        await cc.withdrawLink({from: consumer});
+        const afterBalance = await link.balanceOf(consumer);
+        assert.equal(afterBalance.toString(), web3.toWei("1", "ether"));
+      });
+    });
+  });
 });

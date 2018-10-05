@@ -64,9 +64,10 @@ contract MyContract is Chainlinked, Ownable {
     currentPrice = _price;
   }
 
-  // function withdrawLink() public onlyOwner {
-  //   require(link.transfer(owner, link.balanceOf(address(this))), "Unable to transfer");
-  // }
+  function withdrawLink() public onlyOwner {
+    LinkToken link = LinkToken(chainlinkToken());
+    require(link.transfer(msg.sender, link.balanceOf(address(this))), "Unable to transfer");
+  }
 
   modifier withJobId() {
     require(jobId != 0x00, "No JobID present");

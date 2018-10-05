@@ -255,9 +255,9 @@ cbor = require("cbor");
 
   decodeRunRequest = log => {
     let runABI = util.toBuffer(log.data);
-    let types = ["uint256", "bytes"];
-    let [version, data] = abi.rawDecode(types, runABI);
-    return [log.topics[1], log.topics[2], log.topics[3], version, data];
+    let types = ["uint256", "uint256", "bytes"];
+    let [internalId, version, data] = abi.rawDecode(types, runABI);
+    return [log.topics[1], log.topics[2], log.topics[3], bigNum(internalId), version, data];
   };
 
   requestDataBytes = (specId, to, fHash, runId, data) => {
@@ -269,5 +269,13 @@ cbor = require("cbor");
   };
 
   requestDataFrom = (oc, link, amount, args) => link.transferAndCall(oc.address, amount, args);
+
+  increaseTime5Minutes = async () => {
+    await web3.currentProvider.send({
+      jsonrpc: "2.0", 
+      method: "evm_increaseTime", 
+      params: [300], id: 0
+    });
+  };
 
 })();
