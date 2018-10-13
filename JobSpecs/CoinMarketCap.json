@@ -1,0 +1,52 @@
+{
+	"initiators": [
+		{
+			"type": "runlog",
+			"params": {
+				"address": "0x72eF200e2ab1A2f6dCa17a02fF05b72A9aEFeEF5"
+			}
+		}
+	],
+	"tasks": [
+		{
+			"type": "coinmarketcap",
+			"confirmations": 0,
+			"params": {
+				"sym": "ETH",
+				"convert": "USD"
+			}
+		},
+		{
+			"type": "copy",
+			"confirmations": 0,
+			"params": {
+				"copyPath": [
+					"data",
+					"ETH",
+					"quote",
+					"USD",
+					"price"
+				]
+			}
+		},
+		{
+			"type": "multiply",
+			"confirmations": 0,
+			"params": {
+				"times": 100
+			}
+		},
+		{
+			"type": "ethuint256",
+			"confirmations": 0,
+			"params": {}
+		},
+		{
+			"type": "ethtx",
+			"confirmations": 0,
+			"params": {}
+		}
+	],
+	"startAt": null,
+	"endAt": null
+}

@@ -1,24 +1,23 @@
-# Chainlinked
+# Chainlink Price Aggregation Example
 
-Implementation of [how to make a Chainlinked contract](https://docs.chain.link/docs/getting-started).
+Example contract that creates 3 separate Chainlink requests and averages the responses.
 
 ## Requirements
 
 - NPM
 - Truffle
-- Yarn
 - GCC (for testing)
 
 ## Installation
 
 ```bash
-$ yarn install
+$ npm install
 ```
 
 ## Test
 
 ```bash
-$ truffle test
+$ npm test
 ```
 
 ## Deploy
@@ -28,7 +27,7 @@ If needed, edit the truffle.js config file to set the desired network to a diffe
 ### Local development
 
 ```bash
-$ truffle migrate --network development
+$ npm run deploy:dev
 ```
 
 ### Public chains

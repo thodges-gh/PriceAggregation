@@ -10,9 +10,11 @@ cbor = require("cbor");
   before(async function () {
     accounts = await eth.accounts;
     defaultAccount = accounts[0];
-    oracleNode = accounts[1];
-    stranger = accounts[2];
-    consumer = accounts[3];
+    stranger = accounts[1];
+    consumer = accounts[2];
+    oracleNode1 = accounts[3];
+    oracleNode2 = accounts[4];
+    oracleNode3 = accounts[5];
   });
 
   Eth = (method, params) => {

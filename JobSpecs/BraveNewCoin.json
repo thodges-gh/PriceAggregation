@@ -1,0 +1,51 @@
+{
+	"initiators": [
+		{
+			"type": "runlog",
+			"params": {
+				"address": "0xa65DA24C87016Ba2367dB823c01b48B696F6229a"
+			}
+		}
+	],
+	"tasks": [
+		{
+			"type": "bravenewcoin",
+			"confirmations": 0,
+			"params": {
+				"endpoint": "mwa-historic",
+				"coin": "ETH",
+				"market": "USD"
+			}
+		},
+		{
+			"type": "copy",
+			"confirmations": 0,
+			"params": {
+				"copyPath": [
+					"data",
+					"0",
+					"1"
+				]
+			}
+		},
+		{
+			"type": "multiply",
+			"confirmations": 0,
+			"params": {
+				"times": 100
+			}
+		},
+		{
+			"type": "ethuint256",
+			"confirmations": 0,
+			"params": {}
+		},
+		{
+			"type": "ethtx",
+			"confirmations": 0,
+			"params": {}
+		}
+	],
+	"startAt": null,
+	"endAt": null
+}
