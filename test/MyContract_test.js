@@ -128,6 +128,35 @@ contract("MyContract", () => {
     });
   });
 
+  describe("#manualAggregateAnswer", () => {
+    let response1 = "0x" + encodeUint256(15000);
+    let response2 = "0x" + encodeUint256(15500);
+    let expected = 15250;
+    let internalId1, internalId2;
+
+    beforeEach(async () => {
+      await link.transfer(cc.address, web3.toWei("3", "ether"));
+      await cc.addRequest(jobId1, oc1.address, {from: consumer});
+      await cc.addRequest(jobId2, oc2.address, {from: consumer});
+      await cc.addRequest(jobId3, oc3.address, {from: consumer});
+      await cc.createRequests({from: consumer});
+      let event1 = await getLatestEvent(oc1);
+      let event2 = await getLatestEvent(oc2);
+      internalId1 = event1.args.internalId;
+      internalId2 = event2.args.internalId;
+      await oc1.fulfillData(internalId1, response1, {from: oracleNode1});
+      await oc2.fulfillData(internalId2, response2, {from: oracleNode2});
+    });
+
+    context("when an oracle did not respond", () => {
+      it("only aggregates the responses", async () => {
+        await cc.manualAggregateAnswer({from: consumer});
+        let averagePrice = await cc.averagePrice.call();
+        assert.equal(averagePrice.toNumber(), expected);
+      });
+    });
+  });
+
   describe("#cancelRequest", () => {
     beforeEach(async () => {
       await link.transfer(cc.address, web3.toWei("1", "ether"));
