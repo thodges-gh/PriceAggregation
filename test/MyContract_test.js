@@ -7,9 +7,9 @@ contract("MyContract", () => {
   let Oracle = artifacts.require("Oracle");
   let MyContract = artifacts.require("MyContract");
   // JobIDs can be made up in tests, but these are valid on Ropsten
-  let jobId1 = "f1896c9b0b2647fbb2e56671b1470ba5"; // BraveNewCoin. Rinkeby: 78ffc47fef894b68af7c6f1f13767388
-  let jobId2 = "d606caef371d4d91a7afad7a8c30f02f"; // CoinMarketCap. Rinkeby: e097b47bde20434a8af49b4c9f827811
-  let jobId3 = "05b53e906a7c49b1be9023a3002e3c8a"; // CryptoCompare. Rinkeby: 6315daee46ca4a5b87b448583951751e
+  let jobId1 = "f1896c9b0b2647fbb2e56671b1470ba5"; // BraveNewCoin. Rinkeby: "78ffc47fef894b68af7c6f1f13767388", "0xa65DA24C87016Ba2367dB823c01b48B696F6229a"
+  let jobId2 = "d606caef371d4d91a7afad7a8c30f02f"; // CoinMarketCap. Rinkeby:"e097b47bde20434a8af49b4c9f827811", "0x72eF200e2ab1A2f6dCa17a02fF05b72A9aEFeEF5"
+  let jobId3 = "05b53e906a7c49b1be9023a3002e3c8a"; // CryptoCompare. Rinkeby: "6315daee46ca4a5b87b448583951751e", "0xdaDd840F240c134624C430509CcFA0B04903018D"
   let link, oc1, oc2, oc3, cc;
 
   beforeEach(async () => {

@@ -1041,11 +1041,11 @@ contract MyContract is Chainlinked, Ownable {
     setLinkToken(_link);
   }
 
-  function addRequest(bytes32 _jobId, address _oracle)
+  function addRequest(string _jobId, address _oracle)
     public
     onlyOwner
   {
-    requests[bytes32(createdRequestCount)] = Request(_jobId, _oracle, 0);
+    requests[bytes32(createdRequestCount)] = Request(stringToBytes32(_jobId), _oracle, 0);
     createdRequestCount = createdRequestCount.add(1);
     pendingRequestCount = pendingRequestCount.add(1);
   }
@@ -1107,5 +1107,16 @@ contract MyContract is Chainlinked, Ownable {
   {
     LinkToken link = LinkToken(chainlinkToken());
     require(link.transfer(msg.sender, link.balanceOf(address(this))), "Unable to transfer");
+  }
+
+  function stringToBytes32(string memory source) private pure returns (bytes32 result) {
+    bytes memory tempEmptyStringTest = bytes(source);
+    if (tempEmptyStringTest.length == 0) {
+      return 0x0;
+    }
+
+    assembly {
+      result := mload(add(source, 32))
+    }
   }
 }
