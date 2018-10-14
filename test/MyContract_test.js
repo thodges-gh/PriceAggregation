@@ -148,6 +148,14 @@ contract("MyContract", () => {
       await oc2.fulfillData(internalId2, response2, {from: oracleNode2});
     });
 
+    context("when called by a non-owner", () => {
+      it("does not aggregate", async () => {
+        await assertActionThrows(async () => {
+          await cc.manualAggregateAnswer({from: stranger});
+        });
+      });
+    });
+
     context("when an oracle did not respond", () => {
       it("only aggregates the responses", async () => {
         await cc.manualAggregateAnswer({from: consumer});
